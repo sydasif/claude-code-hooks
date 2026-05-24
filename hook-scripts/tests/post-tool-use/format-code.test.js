@@ -72,6 +72,14 @@ describe('Unit: getFormatter()', () => {
     assert.ok(Array.isArray(result('/path/to/file.py')));
   });
 
+  it('returns prettier for .js files', () => {
+    assert.strictEqual(typeof getFormatter('/path/to/file.js'), 'function');
+  });
+
+  it('returns prettier for .ts files', () => {
+    assert.strictEqual(typeof getFormatter('/path/to/file.ts'), 'function');
+  });
+
   it('returns prettier for .md files', () => {
     assert.strictEqual(typeof getFormatter('/path/to/readme.md'), 'function');
   });
@@ -88,9 +96,11 @@ describe('Unit: getFormatter()', () => {
     assert.strictEqual(typeof getFormatter('/path/to/package.json'), 'function');
   });
 
+  it('returns prettier for .html files', () => {
+    assert.strictEqual(typeof getFormatter('/path/to/index.html'), 'function');
+  });
+
   it('returns null for unsupported extensions', () => {
-    assert.strictEqual(getFormatter('/path/to/file.js'), null);
-    assert.strictEqual(getFormatter('/path/to/file.ts'), null);
     assert.strictEqual(getFormatter('/path/to/file.go'), null);
     assert.strictEqual(getFormatter('/path/to/file.txt'), null);
   });

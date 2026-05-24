@@ -22,7 +22,7 @@ const { spawnSync } = require('child_process');
 
 const LOG_DIR = path.join(process.env.HOME, '.claude', 'hooks-logs');
 
-const PRETTIER_EXTS = new Set(['.md', '.yaml', '.yml', '.json']);
+const PRETTIER_EXTS = new Set(['.js', '.ts', '.json', '.md', '.yaml', '.yml', '.html']);
 
 const FORMATTERS = {
   '.py': (fp) => [
