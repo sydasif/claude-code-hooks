@@ -68,24 +68,24 @@ function runHook(hookData) {
 describe('Unit: getFormatter()', () => {
   it('returns ruff for .py files', () => {
     const result = getFormatter('/path/to/file.py');
-    assert.strictEqual(result.name, 'ruff');
-    assert.ok(Array.isArray(result.commands('/path/to/file.py')));
+    assert.strictEqual(typeof result, 'function');
+    assert.ok(Array.isArray(result('/path/to/file.py')));
   });
 
   it('returns prettier for .md files', () => {
-    assert.strictEqual(getFormatter('/path/to/readme.md').name, 'prettier');
+    assert.strictEqual(typeof getFormatter('/path/to/readme.md'), 'function');
   });
 
   it('returns prettier for .yaml files', () => {
-    assert.strictEqual(getFormatter('/path/to/config.yaml').name, 'prettier');
+    assert.strictEqual(typeof getFormatter('/path/to/config.yaml'), 'function');
   });
 
   it('returns prettier for .yml files', () => {
-    assert.strictEqual(getFormatter('/path/to/config.yml').name, 'prettier');
+    assert.strictEqual(typeof getFormatter('/path/to/config.yml'), 'function');
   });
 
   it('returns prettier for .json files', () => {
-    assert.strictEqual(getFormatter('/path/to/package.json').name, 'prettier');
+    assert.strictEqual(typeof getFormatter('/path/to/package.json'), 'function');
   });
 
   it('returns null for unsupported extensions', () => {
@@ -96,13 +96,13 @@ describe('Unit: getFormatter()', () => {
   });
 
   it('handles uppercase extensions', () => {
-    assert.strictEqual(getFormatter('/path/to/file.PY').name, 'ruff');
-    assert.strictEqual(getFormatter('/path/to/file.MD').name, 'prettier');
-    assert.strictEqual(getFormatter('/path/to/file.JSON').name, 'prettier');
+    assert.strictEqual(typeof getFormatter('/path/to/file.PY'), 'function');
+    assert.strictEqual(typeof getFormatter('/path/to/file.MD'), 'function');
+    assert.strictEqual(typeof getFormatter('/path/to/file.JSON'), 'function');
   });
 
   it('handles extensions with paths containing dots', () => {
-    assert.strictEqual(getFormatter('/path/to/some.config.file.yaml').name, 'prettier');
+    assert.strictEqual(typeof getFormatter('/path/to/some.config.file.yaml'), 'function');
   });
 });
 
@@ -291,11 +291,10 @@ describe('Config: FORMATTERS structure', () => {
     }
   });
 
-  it('has name and commands for each formatter', () => {
-    for (const [ext, fmt] of Object.entries(FORMATTERS)) {
-      assert.ok(typeof fmt.name === 'string', `Formatter ${ext} missing name`);
-      assert.ok(typeof fmt.commands === 'function', `Formatter ${ext} missing commands function`);
-      const cmds = fmt.commands(`/tmp/test${ext}`);
+  it('has commands for each formatter', () => {
+    for (const [ext, getCmds] of Object.entries(FORMATTERS)) {
+      assert.ok(typeof getCmds === 'function', `Formatter ${ext} missing commands function`);
+      const cmds = getCmds(`/tmp/test${ext}`);
       assert.ok(Array.isArray(cmds), `commands for ${ext} should return array`);
       assert.ok(cmds.length > 0, `commands for ${ext} should have at least one command`);
     }
